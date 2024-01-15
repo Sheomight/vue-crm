@@ -75,6 +75,7 @@
 <script>
 import { useVuelidate } from '@vuelidate/core'
 import { email, required, minLength } from '@vuelidate/validators'
+import messages from '@/common/messages'
 
 export default {
   name: 'login-view',
@@ -94,17 +95,28 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
+      
       if (this.v$.$invalid) {
         this.v$.$touch()
         return
       }
+
       const formData = {
         email: this.email,
         password: this.password
       }
-      console.log(formData);
-      this.$router.push('/')
+
+      try {
+        await this.$store.dispatch('login', formData)
+        this.$router.push('/')
+        // eslint-disable-next-line
+      } catch (e) {}
+    }
+  },
+  mounted() {
+    if (messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message])
     }
   }
 }

@@ -15,13 +15,14 @@ export default {
     async register({dispatch, commit}, {email, password, name}) {
       try {
         const auth = getAuth()
+        await createUserWithEmailAndPassword(auth, email, password)
         const uid = await dispatch('getUid')
         const db = getDatabase()
         set(ref(db, `users/${uid}/info`), {
           bill: 10000,
-          name
+          name,
+          email
         })
-        await createUserWithEmailAndPassword(auth, email, password)
       } catch (e) {
         commit('setError', e)
         throw e
@@ -32,9 +33,10 @@ export default {
       const user = auth.currentUser
       return user ? user.uid : null
     },
-    async logout() {
+    async logout({commit}) {
       const auth = getAuth()
       await signOut(auth)
+      commit('clearInfo')
     }
   }
 }

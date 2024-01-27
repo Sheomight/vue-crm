@@ -16,7 +16,7 @@
           data-target="dropdown" 
           ref="dropdown"
           >
-            USER NAME
+            {{ name }}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -45,7 +45,7 @@ export default {
     return {
       currentDate: new Date(),
       interval: null,
-      dropdown: null
+      dropdown: null,
     }
   },
   methods: {
@@ -67,6 +67,11 @@ export default {
       }
 
       return new Intl.DateTimeFormat('locale', options).format(new Date(value))
+    }
+  },
+  computed: {
+    name() {
+      return this.$store.getters.info.name
     }
   },
   mounted() {
